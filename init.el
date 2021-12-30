@@ -6,9 +6,6 @@
 ;; Enable use-package
 (require 'use-package)
 
-;; Installed Packages
-;; FIXME: Whoops... There's not much left here!
-
 ;; Set Emacs Theme
 (load-theme 'gruvbox-dark-soft t)
 
@@ -18,9 +15,6 @@
 ;; Set Default Font
 (set-face-attribute 'default nil :font "IBM Plex Mono Text")
 (add-to-list 'default-frame-alist '(font . "IBM Plex Mono Text"))
-
-;; Emacs Speaks Statistics Setup
-(load "ess-autoloads")
 
 ;; Sly (SLIME) Setup + Company REPL
 (setq inferior-lisp-program "sbcl --dynamic-space-size 2048")
@@ -33,44 +27,6 @@
     (call-interactively 'sly-eval-last-expression)))
 (eval-after-load 'sly
   '(define-key sly-mode-map (kbd "<C-return>") 'save-lisp-result))
-
-;; Enable Interactive Haskell
-(require 'haskell-interactive-mode)
-(require 'haskell-process)
-(add-hook 'haskell-mode-hook 'interactive-haskell-mode)
-(setq-default flycheck-disabled-checkers '(haskell-ghc haskell-hlint))
-
-;; Autocomplete Setup
-(add-hook 'prog-mode-hook 'company-mode)
-(setq company-idle-delay 0)
-(eval-after-load 'company
-  '(progn
-         (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
-         (define-key company-active-map (kbd "RET") nil)
-         (define-key company-active-map [return] nil)))
-
-;; Set up snippet support!
-;; (yas-global-mode)
-
-;; Basic LSP setup
-(require 'lsp-mode)
-(add-hook 'rust-mode-hook #'lsp)
-(setq lsp-auto-guess-root t)
-
-;; Enable Flycheck everywhere
-(use-package flycheck
-  :ensure t
-  :init (global-flycheck-mode))
-
-;; Set up debugging
-;; (dap-mode 1)
-;; (dap-ui-mode 1)
-;; (dap-tooltip-mode 1)
-;; (tooltip-mode 1)
-;; (require 'dap-gdb-lldb)
-
-;; Rainbow Delimiters in Programing Mode
-(add-hook 'prog-mode-hook 'rainbow-delimiters-mode)
 
 ;; Set up automatic pairing of quotes and parentheses
 (electric-pair-mode)
@@ -149,29 +105,43 @@
 
 ;; Org-Roam Setup
 (use-package org-roam
-  :hook
-  (after-init . org-roam-mode)
+  :ensure t
   :custom
-  (org-roam-directory "~/Documents/Zettelkasten/")
-  (org-roam-link-title-format "§%s")
-  (org-roam-completion-system 'ivy)
-  :bind (:map org-roam-mode-map
-              (("C-c n l" . org-roam)
-               ("C-c n f" . org-roam-find-file)
-               ("C-c n j" . org-roam-jump-to-index)
-               ("C-c n b" . org-roam-switch-to-buffer)
-               ("C-c n g" . org-roam-graph))
-              :map org-mode-map
-              (("C-c n i" . org-roam-insert)))
+  (org-roam-directory (file-truename "~/Documents/Zettelkasten/"))
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+          ("C-c n f" . org-roam-node-find)
+          ("C-c n i" . org-roam-node-insert))
+  :config
+  (org-roam-setup)
   :init
   (setq org-roam-v2-ack t))
 
+;; Ivy Autocompletion Setup
+(use-package ivy
+  :ensure t
+  :custom
+  (setq ivy-use-virtual-buffers t)
+  (setq enable-recursive-minibuffers t)
+  :config
+  (ivy-mode))
+
+;; Dependency For Evil (Until Emacs 28)
+(use-package undo-fu
+  :ensure t)
+
+;; Evil Mode (Vim Keybindings)
+(use-package evil
+  :ensure t
+  :custom
+  (evil-undo-system 'undo-fu)
+  :config
+  (evil-mode 0))
+
 ;; My Zettel Template
 (setq org-roam-capture-templates
-      '(("d" "default" plain #'org-roam-capture--get-point
-        "%?"
-        :file-name "%<%Y-%m-%d>-${slug}"
-        :head "#+TITLE: ${title}\n#+DATE: %<%F (%R)>\n"
+      '(("d" "default" plain "%?"
+        :if-new (file+head "%<%Y-%m-%d>-${slug}.org"
+                           "#+TITLE: ${title}\n#+DATE: %<%F (%R)>\n")
         :unnarrowed t
         :immediate-finish t)))
 
@@ -252,6 +222,13 @@
 ;; Don't init-frame if running with a file argument
 (unless (> (length command-line-args) 1)
   (init-frame (selected-frame)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(use-package sly org-roam org-download multi-term ivy gruvbox-theme)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
