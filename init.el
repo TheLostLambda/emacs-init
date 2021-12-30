@@ -3,11 +3,20 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-;; Enable use-package
+;; Pull the package list if it's missing
+(unless package-archive-contents
+  (package-refresh-contents))
+
+;; Install and Enable use-package
+(unless (package-installed-p 'use-package)
+  (package-install 'use-package))
 (require 'use-package)
 
 ;; Set Emacs Theme
-(load-theme 'gruvbox-dark-soft t)
+(use-package gruvbox-theme
+  :ensure t
+  :config
+  (load-theme 'gruvbox-dark-soft t))
 
 ;; Get rid of the big GUI toolbar
 (tool-bar-mode -1)
@@ -17,8 +26,12 @@
 (add-to-list 'default-frame-alist '(font . "IBM Plex Mono Text"))
 
 ;; Sly (SLIME) Setup + Company REPL
-(setq inferior-lisp-program "sbcl --dynamic-space-size 2048")
-(add-hook 'sly-mode-hook 'company-mode)
+(use-package sly
+  :ensure t
+  :custom
+  (setq inferior-lisp-program "sbcl --dynamic-space-size 2048")
+  :config
+  (add-hook 'sly-mode-hook 'company-mode))
 
 ;; Sly C-return evals and adds result in a comment
 (defun save-lisp-result ()
@@ -96,12 +109,15 @@
 (add-to-list 'org-modules 'habits)
 
 ;; Org-Download Setup
-(require 'org-download)
-(when (executable-find "spectacle")
-  (setq org-download-screenshot-method "spectacle -rbno %s"))
-(setq-default org-download-image-dir ".orgimg/")
-(setq org-download-annotate-function (lambda (_) ""))
-(global-set-key "\C-cs" 'org-download-screenshot)
+(use-package org-download
+  :ensure t
+  :custom
+  (setq-default org-download-image-dir ".orgimg/")
+  (setq org-download-annotate-function (lambda (_) ""))
+  :bind (("C-c s" . org-download-screenshot))
+  :config
+  (when (executable-find "spectacle")
+    (setq org-download-screenshot-method "spectacle -rbno %s")))
 
 ;; Org-Roam Setup
 (use-package org-roam
@@ -197,7 +213,9 @@
 
 ;; Bind multi-term
 ;; FIXME: Make this launch asyncronously?
-(global-set-key "\C-xt" 'multi-term)
+(use-package multi-term
+  :ensure t
+  :bind (("C-x t" . multi-term)))
 
 ;; Set up line numbers and line highlighting
 (add-hook 'prog-mode-hook 'display-line-numbers-mode)
@@ -227,8 +245,7 @@
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(use-package sly org-roam org-download multi-term ivy gruvbox-theme)))
+ '(package-selected-packages '(use-package multi-term)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
