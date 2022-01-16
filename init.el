@@ -29,7 +29,7 @@
 (use-package sly
   :ensure t
   :custom
-  (setq inferior-lisp-program "sbcl --dynamic-space-size 2048")
+  (inferior-lisp-program "sbcl --dynamic-space-size 2048")
   :config
   (add-hook 'sly-mode-hook 'company-mode))
 
@@ -102,7 +102,6 @@
 (setq org-preview-latex-image-directory ".ltximg/")
 (setcar (nthcdr 4 org-emphasis-regexp-components) 3)
 (setq org-agenda-files '("~/Documents/Notebook/Trackers/Development.org"))
-;(setq org-latex-create-formula-image-program 'imagemagick)
 (setq image-scaling (if (> (display-pixel-width) 2560) 3 1.5))
 (setq org-format-latex-options (plist-put org-format-latex-options :scale image-scaling))
 (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
@@ -111,11 +110,10 @@
 ;; Org-Download Setup
 (use-package org-download
   :ensure t
-  :custom
-  (setq-default org-download-image-dir ".orgimg/")
-  (setq org-download-annotate-function (lambda (_) ""))
   :bind (("C-c s" . org-download-screenshot))
   :config
+  (setq-default org-download-image-dir ".orgimg/")
+  (setq org-download-annotate-function (lambda (_) ""))
   (when (executable-find "spectacle")
     (setq org-download-screenshot-method "spectacle -rbno %s")))
 
@@ -136,8 +134,8 @@
 (use-package ivy
   :ensure t
   :custom
-  (setq ivy-use-virtual-buffers t)
-  (setq enable-recursive-minibuffers t)
+  (ivy-use-virtual-buffers t)
+  (enable-recursive-minibuffers t)
   :config
   (ivy-mode))
 
@@ -240,15 +238,3 @@
 ;; Don't init-frame if running with a file argument
 (unless (> (length command-line-args) 1)
   (init-frame (selected-frame)))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages '(use-package multi-term)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
