@@ -25,13 +25,11 @@
 (set-face-attribute 'default nil :font "IBM Plex Mono Text")
 (add-to-list 'default-frame-alist '(font . "IBM Plex Mono Text"))
 
-;; Sly (SLIME) Setup + Company REPL
+;; Sly (SLIME) Setup + REPL
 (use-package sly
   :ensure t
   :custom
-  (inferior-lisp-program "sbcl --dynamic-space-size 2048")
-  :config
-  (add-hook 'sly-mode-hook 'company-mode))
+  (inferior-lisp-program "sbcl --dynamic-space-size 2048"))
 
 ;; Sly C-return evals and adds result in a comment
 (defun save-lisp-result ()
@@ -40,6 +38,22 @@
     (call-interactively 'sly-eval-last-expression)))
 (eval-after-load 'sly
   '(define-key sly-mode-map (kbd "<C-return>") 'save-lisp-result))
+
+;; CIDER + Clojure Setup
+(use-package cider :ensure t)
+(use-package clojure-mode-extra-font-locking :ensure t)
+
+;; Trigger Paredit and Rainbow Delimiters on code buffers
+(use-package paredit
+  :ensure t
+  :hook
+  (clojure-mode . paredit-mode)
+  (clojurescript-mode . paredit-mode)
+  (emacs-lisp-mode . paredit-mode)
+  (lisp-mode . paredit-mode))
+(use-package rainbow-delimiters
+  :ensure t
+  :hook (prog-mode . rainbow-delimiters-mode))
 
 ;; Set up automatic pairing of quotes and parentheses
 (electric-pair-mode)
@@ -151,6 +165,10 @@
   :config
   (evil-mode 0))
 
+;(use-package affe
+;  :ensure t
+;  :bind (("C-c n g" . affe-grep)))
+
 ;; My Zettel Template
 (setq org-roam-capture-templates
       '(("d" "default" plain "%?"
@@ -238,3 +256,16 @@
 ;; Don't init-frame if running with a file argument
 (unless (> (length command-line-args) 1)
   (init-frame (selected-frame)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(rainbow-delimiters paredit clojure-mode-extra-font-locking cider affe multi-term evil undo-fu ivy org-roam org-download sly gruvbox-theme use-package)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
