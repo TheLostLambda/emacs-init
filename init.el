@@ -127,29 +127,6 @@
 (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 (add-to-list 'org-modules 'habits)
 
-;; Org-Download Setup
-(use-package org-download
-  :ensure t
-  :bind (("C-c s" . org-download-screenshot))
-  :config
-  (setq-default org-download-image-dir ".orgimg/")
-  (setq org-download-annotate-function (lambda (_) ""))
-  (when (executable-find "spectacle")
-    (setq org-download-screenshot-method "spectacle -rbno %s")))
-
-;; Org-Roam Setup
-(use-package org-roam
-  :ensure t
-  :custom
-  (org-roam-directory (file-truename "~/Documents/Zettelkasten/"))
-  :bind (("C-c n l" . org-roam-buffer-toggle)
-          ("C-c n f" . org-roam-node-find)
-          ("C-c n i" . org-roam-node-insert))
-  :config
-  (org-roam-setup)
-  :init
-  (setq org-roam-v2-ack t))
-
 ;; Ivy Autocompletion Setup
 (use-package ivy
   :ensure t
@@ -170,18 +147,6 @@
   (evil-undo-system 'undo-fu)
   :config
   (evil-mode 0))
-
-;(use-package affe
-;  :ensure t
-;  :bind (("C-c n g" . affe-grep)))
-
-;; My Zettel Template
-(setq org-roam-capture-templates
-      '(("d" "default" plain "%?"
-        :if-new (file+head "%<%Y-%m-%d>-${slug}.org"
-                           "#+TITLE: ${title}\n#+DATE: %<%F (%R)>\n")
-        :unnarrowed t
-        :immediate-finish t)))
 
 ;; Prefer opening PDFs in an external program
 (add-to-list 'org-file-apps '("pdf" . "evince %s"))
@@ -262,16 +227,3 @@
 ;; Don't init-frame if running with a file argument
 (unless (> (length command-line-args) 1)
   (init-frame (selected-frame)))
-(custom-set-variables
- ;; custom-set-variables was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(package-selected-packages
-   '(company rainbow-delimiters paredit clojure-mode-extra-font-locking cider affe multi-term evil undo-fu ivy org-roam org-download sly gruvbox-theme use-package)))
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
