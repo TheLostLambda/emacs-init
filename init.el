@@ -58,7 +58,8 @@
 ;; Enable Code Completion With Company
 (use-package company
   :ensure t
-  :hook (prog-mode . company-mode))
+  :hook (prog-mode . company-mode)
+  :bind ("TAB" . company-indent-or-complete-common))
 
 ;; Set up automatic pairing of quotes and parentheses
 (electric-pair-mode)
