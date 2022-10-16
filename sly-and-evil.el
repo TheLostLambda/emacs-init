@@ -40,7 +40,7 @@
 (use-package sly
   :ensure t
   :custom
-  (inferior-lisp-program "sbcl --dynamic-space-size 2048"))
+  (inferior-lisp-program "ros run -- --dynamic-space-size 2048"))
 
 ;; Edit parentheses in a structured way
 (use-package paredit
