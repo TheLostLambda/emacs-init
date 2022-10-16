@@ -127,6 +127,16 @@
 (org-set-emph-re 'org-emphasis-regexp-components org-emphasis-regexp-components)
 (add-to-list 'org-modules 'habits)
 
+;; AucTeX Setup
+(use-package auctex
+  :ensure
+  :custom
+  (setq TeX-auto-save t)
+  (setq TeX-parse-self t)
+  :hook
+  (latex-mode . flymake-mode)
+  (context-mode . flymake-mode))
+
 ;; Ivy Autocompletion Setup
 (use-package ivy
   :ensure t
@@ -156,10 +166,6 @@
 
 ;; Allow spaces in the minibuffer
 (define-key minibuffer-local-completion-map (kbd "SPC") 'self-insert-command)
-
-;; Some AUCTeX Setting Tweaks
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
 
 ;; Overwrite Highlighted Text When Typing
 (delete-selection-mode 1)
@@ -210,16 +216,11 @@
 
 ;; Open a couple of files by default and set default frame size
 (setq inhibit-startup-screen t)
-(setq left-file "~/Documents/Notebook/Index.org")
-(setq right-file "~/Documents/University/Classes.org")
+(setq startup-file "~/Documents/Notebook/Index.org")
 (defun init-frame (frame)
   (with-selected-frame frame
-    (set-frame-size frame 164 48)
-    (find-file left-file)
-    (split-window-horizontally)
-    (next-window)
-    (find-file right-file)
-    (setq initial-buffer-choice right-file)))
+    (set-frame-size frame 80 24)
+    (find-file startup-file)))
 
 ;; Run init-frame when a new frame is created
 (add-hook 'after-make-frame-functions 'init-frame)
@@ -227,3 +228,16 @@
 ;; Don't init-frame if running with a file argument
 (unless (> (length command-line-args) 1)
   (init-frame (selected-frame)))
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(auctex multi-term evil undo-fu ivy company rainbow-delimiters paredit clojure-mode-extra-font-locking cider sly gruvbox-theme use-package)))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
