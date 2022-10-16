@@ -33,8 +33,7 @@
 ;; Enable code completion
 (use-package company
   :ensure t
-  :hook (prog-mode . company-mode)
-  :bind ("TAB" . company-indent-or-complete-common))
+  :hook (prog-mode . company-mode))
 
 ;; Sly (SLIME) setup + REPL
 (use-package sly
