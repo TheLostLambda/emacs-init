@@ -22,8 +22,8 @@
 (tool-bar-mode -1)
 
 ;; Set Default Font
-(set-face-attribute 'default nil :font "IBM Plex Mono Text")
-(add-to-list 'default-frame-alist '(font . "IBM Plex Mono Text"))
+(set-face-attribute 'default nil :font "Berkeley Mono")
+(add-to-list 'default-frame-alist '(font . "Berkeley Mono"))
 
 ;; Sly (SLIME) Setup + REPL
 (use-package sly

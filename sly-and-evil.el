@@ -26,7 +26,7 @@
 (tool-bar-mode -1)
 
 ;; Set default font
-(set-face-attribute 'default nil :font "IBM Plex Mono Text")
+(set-face-attribute 'default nil :font "Berkeley Mono")
 
 ;;; Setup Common Lisp IDE ======================================================
 
